@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Triângulo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            #resultado span {
+                color: blue;
+            }
+
+            #resultado em {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Triângulo</h1>
+        <form action="#">
+            <table>
+                <tr>
+                    <th><label for="lado1">Lado 1</label></th>
+                    <td><input type="text" id="lado1" name="lado1"/></td>
+                </tr>
+                <tr>
+                    <th><label for="lado2">Lado 2</label></th>
+                    <td><input type="text" id="lado2" name="lado2"/></td>
+                </tr>
+                <tr>
+                    <th><label for="lado3">Lado 3</label></th>
+                    <td><input type="text" id="lado3" name="lado3"/></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><input type="submit" value="Verificar"/></td>
+                </tr>
+            </table>
+        </form>
+        <div id="resultado">
+        </div>
+        <script src="js/libs/jquery/jquery.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#resultado').hide();
+
+                $('form').submit(function (ev) {
+                    var l1 = $('#lado1').val();
+                    var l2 = $('#lado2').val();
+                    var l3 = $('#lado3').val();
+
+                    $.ajax({
+                        url: 'webresources/triangulos/' + l1 + '/' + l2 + '/' + l3,
+                        method: 'get',
+                        success: function (data, textStatus, jqXHR) {
+                            $('#resultado').html('<p>As medidas <span>' + l1 + '</span>, <span>' + l2 + '</span> e <span>' + l3 + '</span> formam um triângulo <span>' + data.tipo + '</span>.</p>');
+                            $('#resultado').show();
+                        },
+                        statusCode: {
+                            404: function () {
+                                $('#resultado').html('<p>As medidas <span>' + l1 + '</span>, <span>' + l2 + '</span> e <span>' + l3 + '</span> <em>não</em> formam um triângulo.</p>');
+                                $('#resultado').show();
+                            }
+                        }
+                    });
+
+                    ev.preventDefault();
+                });
+            });
+        </script>
+    </body>
+</html>
